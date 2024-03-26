@@ -1,4 +1,4 @@
-const User = require("../models/user.schema");
+const User = require("../models/user.model");
 const createRoleIfNone = require("./createRoleIfNone");
 
 const adminAtStartup = async () => {

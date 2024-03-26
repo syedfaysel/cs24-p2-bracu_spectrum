@@ -1,4 +1,4 @@
-const Role = require("../models/role.schema");
+const Role = require("../models/role.model");
 const path = require("path");
 
 async function createRoleIfNone(roleName) {
