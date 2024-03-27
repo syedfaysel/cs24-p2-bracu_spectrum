@@ -7,7 +7,7 @@ const adminAtStartup = require('./utils/createAdminAtStart.js');
 
 
 //import allroutes
-// const allRoutes = require("./routes/index.js");
+const allRoutes = require("./routes");
 
 dotenv.config();
 
@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
   res.status(200).json({ message: "/ get request working" });
 });
 
-// app.use(allRoutes);
+app.use(allRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server running on port http://localhost:${process.env.PORT}`);
