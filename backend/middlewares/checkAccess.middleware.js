@@ -27,7 +27,7 @@ const checkAccess = (resource_slug) => {
     permissions_allowed_list = permissions_allowed_list.map((permission) =>
       permission._id.toString()
     );
-    console.log(permissions_allowed_list);
+    // console.log(permissions_allowed_list);
 
     const permissionObj = await Permission.findOne({
       resource_slug: resource_slug,
