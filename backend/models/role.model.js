@@ -5,7 +5,7 @@ const roleSchema = new Schema({
   title: {
     type: String,
     unique: true,
-    default: "unassigned"
+    required: true,
   }, 
   permissions: [{
     type: Schema.Types.ObjectId,

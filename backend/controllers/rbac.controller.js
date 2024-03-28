@@ -48,8 +48,10 @@ const deletePermission = async (req, res) => {
 // Create and Save a new Role
 const createRole = async (req, res) => {
   try {
-    const role = new Role(req.body);
-    await role.save();
+    console.log(req.body);
+    const role = await Role.create({
+      title: req.body.title,
+    })
     res.status(201).send(role);
   } catch (error) {
     res.status(500).send({
@@ -61,7 +63,7 @@ const createRole = async (req, res) => {
 // get all roles
 const getRoles = async (req, res) => {
   try {
-    const roles = await Role.find();
+    const roles = await Role.find().populate('permissions');
     res.status(200).send(roles);
   } catch (error) {
     res.status(500).send({
