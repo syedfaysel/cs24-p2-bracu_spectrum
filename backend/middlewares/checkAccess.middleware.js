@@ -12,7 +12,9 @@ const checkAccess = (resource_slug) => {
   return async (req, res, next) => {
     // check if logged in
     if (!req.user)
-      return res.status(401).json({ error: "Unauthorized: No token provided" });
+      return res
+        .status(401)
+        .json({ error: "Unauthorized: User not logged in" });
 
     const user = await User.findById(req.user.userId).populate({
       path: "role",
@@ -21,12 +23,34 @@ const checkAccess = (resource_slug) => {
       },
     });
 
-    const permissions_allowed_list = user.role.permissions;
-    const permission = await Permission.find({ resource_slug });
-    if (!!permission && permissions_allowed_list?.includes(permission._id)) {
+    let permissions_allowed_list = user.role?.permissions;
+    permissions_allowed_list = permissions_allowed_list.map((permission) =>
+      permission._id.toString()
+    );
+    console.log(permissions_allowed_list);
+
+    const permissionObj = await Permission.findOne({
+      resource_slug: resource_slug,
+    });
+
+    // const permissionDecoded = permissionObj._id.toString();
+    // console.log(permissionDecoded);
+    if (
+      !!permissionObj &&
+      permissions_allowed_list?.includes(permissionObj._id.toString())
+    ) {
+      console.log(
+        `User ${user.email} has permission to access ${resource_slug}`
+      );
       next();
     } else {
-      res.status(403).send({ error: "Forbidden: Insufficient permissions" });
+      console.log(
+        `User "${user.username}" doesn't have access to "${resource_slug}"`
+      );
+      res.status(403).send({
+        error: "Permission denied",
+        message: `User '${user.username}' doesn't have access to '${resource_slug}'`,
+      });
     }
   };
 };
