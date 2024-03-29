@@ -21,6 +21,8 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import * as z from 'zod';
 import { useFormStatus } from "react-dom";
+import { ShowAlert } from "@/components/show-alert";
+import {useToast} from "@/components/ui/use-toast";
 
 type LoginData = {
   email: string;
@@ -38,6 +40,8 @@ const LoginForm = () => {
     },
   });
 
+  const {toast} = useToast();
+  const [errorResponse, setErrorResponse] = useState<string | null>(null);
   const [loginData, setLoginData] = useState<LoginData | null>(null); 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -52,15 +56,26 @@ const LoginForm = () => {
   const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
     try {
       setLoading(true);
-      console.log(loading)
       const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/auth/login`, data);
-      
 
       if (res.status === 200) {
-        console.log(res.data);
+        if (res.data.success === true) {
+          console.log(res.data)
+          toast({
+            description: "Login Successful",
+          })
+        }
+        localStorage.setItem("user", res.data.user);
       }
     } catch (error: any) {
-      console.log("login failed\n", error.message);
+      // console.log(error.message)
+      // setErrorResponse(`Login Failed: ${error.message}`);
+      toast({
+        variant: "destructive",
+        title: "Login Failed",
+        description: `${error.message}`,
+      })
+
     } finally {
       setLoading(false);
     }
@@ -77,6 +92,7 @@ const LoginForm = () => {
       backButtonHref="/"
       backButtonLabel="Don't have an account? Back to home"
     >
+      {errorResponse && <ShowAlert message={errorResponse} title="Login Failed"/>}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-6">
