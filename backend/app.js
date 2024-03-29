@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db.js");
 const adminAtStartup = require('./utils/createAdminAtStart.js');
+const cors = require('cors');
 
 
 //import allroutes
@@ -17,6 +18,7 @@ adminAtStartup();
 const app = express();
 
 // ---- Middlewares--- //
+app.use(cors())
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(morgan("dev"));
