@@ -19,19 +19,17 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import * as z from 'zod';
+import * as z from "zod";
 import { useFormStatus } from "react-dom";
 import { ShowAlert } from "@/components/show-alert";
-import {useToast} from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 
 type LoginData = {
   email: string;
   password: string;
-}
-
+};
 
 const LoginForm = () => {
-
   const form = useForm({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -40,32 +38,34 @@ const LoginForm = () => {
     },
   });
 
-  const {toast} = useToast();
+  const { toast } = useToast();
   const [errorResponse, setErrorResponse] = useState<string | null>(null);
-  const [loginData, setLoginData] = useState<LoginData | null>(null); 
+  const [loginData, setLoginData] = useState<LoginData | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // const onSubmit = (data: z.infer<typeof LoginSchema>) => {
-  //   setLoginData(data);
-  //   console.log(loading)
-  //   console.log("submitted");
-  // };
+
   const { pending } = useFormStatus();
 
   const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
     try {
       setLoading(true);
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/auth/login`, data);
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/auth/login`,
+        data, {
+          withCredentials: true
+        }
+      );
 
       if (res.status === 200) {
         if (res.data.success === true) {
-          console.log(res.data)
+          console.log(res.data);
           toast({
             description: "Login Successful",
-          })
+          });
         }
-        localStorage.setItem("user", res.data.user);
+        console.log(res.data);
+        window.localStorage.setItem("user", JSON.stringify(res.data.user));
       }
     } catch (error: any) {
       // console.log(error.message)
@@ -74,17 +74,14 @@ const LoginForm = () => {
         variant: "destructive",
         title: "Login Failed",
         description: `${error.message}`,
-      })
-
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
+  useEffect(() => {}, []);
 
-  }, []);
-  
   return (
     <CardWrapper
       label="Login to your account"
@@ -92,7 +89,9 @@ const LoginForm = () => {
       backButtonHref="/"
       backButtonLabel="Don't have an account? Back to home"
     >
-      {errorResponse && <ShowAlert message={errorResponse} title="Login Failed"/>}
+      {errorResponse && (
+        <ShowAlert message={errorResponse} title="Login Failed" />
+      )}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-6">
@@ -110,7 +109,7 @@ const LoginForm = () => {
                       placeholder="sts.manager@ecosync.com"
                     />
                   </FormControl>
-                  <FormMessage/>
+                  <FormMessage />
                 </FormItem>
               )}
             ></FormField>
@@ -122,13 +121,9 @@ const LoginForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      type="password"
-                      placeholder="********"
-                    />
+                    <Input {...field} type="password" placeholder="********" />
                   </FormControl>
-                  <FormMessage/>
+                  <FormMessage />
                 </FormItem>
               )}
             ></FormField>
