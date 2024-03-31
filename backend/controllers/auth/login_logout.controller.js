@@ -21,7 +21,12 @@ const login = async (req, res, next) => {
     //after that create a token & send response
     user.password = undefined; // for security purpose
     const token = user.createJWT();
-    const resUser = await user.populate("role");
+    const resUser = await user.populate({
+      path: "roles",
+      populate: {
+        path: "permissions",
+      }
+    });
     res.cookie("token", token, {
       sameSite: "lax",
       withCredentials: true,
@@ -41,14 +46,10 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    console.log('logout hit')
     return res.status(200).clearCookie('token').json({success: true, message: "User logged out successfully" });
-
-    console.log('should send the response')
   } catch (error) {
-    
-    console.log(error.message);
-    return res.status(500).json({ message: "Internal server error" });
+    // console.log(error.message);
+    return res.status(500).json({sucess: false, message: "Login failed", error: error.message});
   }
 }
 

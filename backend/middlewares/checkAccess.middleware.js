@@ -3,6 +3,7 @@ const authenticateToken = require("./authenticate.middleware");
 // Define a higher-order function that returns the middleware function
 const User = require("../models/user.model");
 const Permission = require("../models/accessPolicy.model");
+const getAllPermissions = require("../utils/getAllPermissions");
 
 const checkAccess = (resource_slug) => {
   /* resource_slug is the resource to be protected 
@@ -17,17 +18,18 @@ const checkAccess = (resource_slug) => {
         .json({ error: "Unauthorized: User not logged in" });
 
     const user = await User.findById(req.user.userId).populate({
-      path: "role",
+      path: "roles",
       populate: {
         path: "permissions",
       },
     });
 
-    let permissions_allowed_list = user.role?.permissions;
+    let permissions_allowed_list = getAllPermissions(user.roles);
+
     permissions_allowed_list = permissions_allowed_list.map((permission) =>
       permission._id.toString()
     );
-    // console.log(permissions_allowed_list);
+    console.log(permissions_allowed_list);
 
     const permissionObj = await Permission.findOne({
       resource_slug: resource_slug,

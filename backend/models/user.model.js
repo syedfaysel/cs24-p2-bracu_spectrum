@@ -24,10 +24,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  role: {
+  roles: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Role",
-  },
+  }],
   created_at: {
     type: Date,
     default: Date.now,
