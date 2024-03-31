@@ -157,6 +157,29 @@ const updateUserRole = async (req, res) => {
   }
 };
 
+
+
+const getPermissions = async (req, res) => {
+  console.log('endpoint hits')
+  const user = req.user;
+  try {
+      resUser = await User.findById(user.userId).populate({
+      path: "role",
+      populate: {
+        path: "permissions",
+        select: ["policy_name", "resource_slug"]
+      }
+    });
+    console.log(resUser.role.permissions)
+    return res.status(200).send(resUser.role.permissions);
+
+  } catch (error) {
+    res.status(500).send({
+      message: error.message || "Some error occurred while retrieving permissions.",
+    });
+  }
+};
+
 module.exports = {
   createUser,
   getUsers,
@@ -165,4 +188,5 @@ module.exports = {
   updateUser,
   deleteUser,
   updateUserRole,
+  getPermissions,
 };

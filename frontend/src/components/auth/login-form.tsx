@@ -59,13 +59,13 @@ const LoginForm = () => {
 
       if (res.status === 200) {
         if (res.data.success === true) {
-          console.log(res.data);
-          toast({
+          // console.log(res.data);
+          await toast({
             description: "Login Successful",
           });
         }
-        console.log(res.data);
         window.localStorage.setItem("user", JSON.stringify(res.data.user));
+        router.push("/profile");
       }
     } catch (error: any) {
       // console.log(error.message)

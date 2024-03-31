@@ -1,32 +1,36 @@
-"use client"
+// import axiosInterceptorInstance from "@/axios/axiosInterceptor";
+import React, { useEffect } from "react";
+import { cookies } from "next/headers";
+import CustomError from "@/components/customError";
+import axios from "axios";
 
-import React, { useEffect } from 'react'
+const page = async () => {
+  console.log("test if user is authorized");
 
-const Test = () => {
+  let permissions = [];
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/user/permissions`, {
+        headers: { Cookie: cookies().toString() },
+        withCredentials: true,
+      }
+    );
 
-  const user = localStorage.getItem("user");
+    if (res.status === 200 && res.data.success === true) {
+      permissions = res.data.permissions;
+    }
+  } catch (error: any) {
+    console.log(error?.message);
+    return <CustomError message={error?.message} />;
+  }
 
-  useEffect(() => {
-    console.log('test...');
-  });
-
+  console.log(permissions);
 
   return (
     <div>
-
-      <h1>Test</h1>
-      {user && (
-        <div>
-          <h1>User</h1>
-          <p>{user}</p>
-        </div>
-      
-      )}
+      <h1>i am deaaaaad</h1>
     </div>
+  );
+};
 
-
-
-  )
-}
-
-export default Test
+export default page;

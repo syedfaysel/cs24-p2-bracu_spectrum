@@ -23,6 +23,7 @@ const login = async (req, res, next) => {
     const token = user.createJWT();
     const resUser = await user.populate("role");
     res.cookie("token", token, {
+      sameSite: "lax",
       withCredentials: true,
       httpOnly: true,
     });
@@ -40,13 +41,18 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    res.clearCookie("token");
-    res.status(200).json({ message: "User logged out successfully" });
+    console.log('logout hit')
+    return res.status(200).clearCookie('token').json({success: true, message: "User logged out successfully" });
+
+    console.log('should send the response')
   } catch (error) {
-    next(error);
+    
+    console.log(error.message);
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 
 module.exports = {
   login,
+  logout,
 };
