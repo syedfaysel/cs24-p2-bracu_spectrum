@@ -6,17 +6,15 @@ const adminAtStartup = async () => {
   // Check if there are any system admin users in the database
   try {
     const users = await User.find().populate({
-      path: "role",
-      match: { role_name: process.env.ADMIN_ROLE_NAME || "sys_admin" },
+      path: "roles",
+      match: {
+        role_name: process.env.ADMIN_ROLE_NAME || "sys_admin",
+      }
     });
 
-    const filteredUsers = users.filter((user) => {
-      return (
-        (user.role && user.role.role_name === process.env.ADMIN_ROLE_NAME ||
-          "sys_admin") 
-      );
-    });
+    const filteredUsers = users.filter(user => user.roles.length > 0);
 
+    // console.log(filteredUsers);
     if (filteredUsers.length === 0) {
       // get the systemAdmin role object id if exists
       const role = await createRoleIfNone(
@@ -28,7 +26,7 @@ const adminAtStartup = async () => {
           username: process.env.ADMIN_USERNAME || "admin",
           password: process.env.ADMIN_PASSWORD || "adminpassword",
           email: process.env.ADMIN_EMAIL || "admin@ecosync.com",
-          role: role._id,
+          roles: [role._id],
         }).then(() => {
           console.log("System admin user created");
         });
