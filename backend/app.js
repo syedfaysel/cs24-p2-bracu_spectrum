@@ -3,9 +3,8 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db.js");
-const adminAtStartup = require('./utils/createAdminAtStart.js');
-const cors = require('cors');
-
+const adminAtStartup = require("./utils/createAdminAtStart.js");
+const cors = require("cors");
 
 //import allroutes
 const allRoutes = require("./routes");
@@ -18,7 +17,11 @@ adminAtStartup();
 const app = express();
 
 // ---- Middlewares--- //
-app.use(cors())
+
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}));
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(morgan("dev"));

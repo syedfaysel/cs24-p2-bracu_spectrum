@@ -4,6 +4,7 @@ const authenticateToken = require("../../middlewares/authenticate.middleware")
 
 
 router.post("/login", auth.login);
+router.get("/logout", authenticateToken, auth.logout);
 
 
 

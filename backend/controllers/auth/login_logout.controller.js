@@ -24,7 +24,7 @@ const login = async (req, res, next) => {
     const resUser = await user.populate("role");
     res.cookie("token", token, {
       withCredentials: true,
-      httpOnly: false,
+      httpOnly: true,
     });
     res.status(200).json({
       message: "User logged in successfully",
@@ -37,6 +37,15 @@ const login = async (req, res, next) => {
     next(error);
   }
 };
+
+const logout = async (req, res, next) => {
+  try {
+    res.clearCookie("token");
+    res.status(200).json({ message: "User logged out successfully" });
+  } catch (error) {
+    next(error);
+  }
+}
 
 module.exports = {
   login,
