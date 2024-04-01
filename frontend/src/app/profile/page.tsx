@@ -3,33 +3,16 @@
 import Logout from '@/components/auth/logout';
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
+import ProfilePage from '@/components/Profile';
 
-const Test = () => {
-  const [user, setUser] = useState(undefined);
-  const router = useRouter();
+const page = () => {
 
-  useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      console.log(user);
-      setUser(user);
-    }
-    else {
-      router.push('/login');
-    }
-  }, []);
 
+  const user:any = [];
 
   return (
     <div>
-
-      <h1>Dashboard</h1>
-      {!!user && (
-        <div>
-          <Logout />
-        </div>
-      
-      )}
+      <ProfilePage />
     </div>
 
 
@@ -37,4 +20,4 @@ const Test = () => {
   )
 }
 
-export default Test
+export default page;

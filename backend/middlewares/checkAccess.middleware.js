@@ -1,5 +1,3 @@
-const authenticateToken = require("./authenticate.middleware");
-
 // Define a higher-order function that returns the middleware function
 const User = require("../models/user.model");
 const Permission = require("../models/accessPolicy.model");

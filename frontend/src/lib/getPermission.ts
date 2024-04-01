@@ -11,7 +11,9 @@ export const getPermissions = async () => {
       }
     );
     if (res.status === 200) {
+      console.log(res.data)
       return res.data;
+
     }
   } catch (error: any) {
     // console.log(error?.message);

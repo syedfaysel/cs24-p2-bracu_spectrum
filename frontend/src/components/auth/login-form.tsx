@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useAuth } from "@/store/authstore";
 import { useRouter } from "next/navigation";
 import CardWrapper from "./card-wrapper";
 import axios from "axios";
@@ -38,11 +39,19 @@ const LoginForm = () => {
     },
   });
 
+  const {isAuthenticated, login} = useAuth();
+
   const { toast } = useToast();
   const [errorResponse, setErrorResponse] = useState<string | null>(null);
   const [loginData, setLoginData] = useState<LoginData | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/profile");
+    }
+  }, [isAuthenticated, router]);
 
 
   const { pending } = useFormStatus();
@@ -60,11 +69,13 @@ const LoginForm = () => {
       if (res.status === 200) {
         if (res.data.success === true) {
           // console.log(res.data);
-          await toast({
+
+          toast({
             description: "Login Successful",
           });
         }
-        window.localStorage.setItem("user", JSON.stringify(res.data.user));
+        // window.localStorage.setItem("user", JSON.stringify(res.data.user));
+        login(res.data.user);
         router.push("/profile");
       }
     } catch (error: any) {
@@ -80,7 +91,6 @@ const LoginForm = () => {
     }
   };
 
-  useEffect(() => {}, []);
 
   return (
     <CardWrapper
