@@ -18,7 +18,7 @@ const page = async () => {
 
   return (
     <div>
-      <h1>Test Page</h1>
+      <h1>Only system Admin can see this page</h1>
       
     </div>
   );

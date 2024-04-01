@@ -20,7 +20,7 @@ const ProfilePage = () => {
     router.push("/login");
   };
 
-  console.log(user);
+  // console.log(user);
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100">
