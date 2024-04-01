@@ -10,12 +10,13 @@ const vehicleSchema = new Schema({
   },
   capacity: {
     type: Number,
-    enum: [3, 5, 7],
+    enum: [3, 5, 7, 15],
     required: true,
   },
   fuelCostPerKmLoaded: { type: Number, required: true },
   fuelCostPerKmUnloaded: { type: Number, required: true },
-  sts: { type: Schema.Types.ObjectId, ref: "STS", unique: true }, // Reference to the STS it belongs to
+  sts: { type: Schema.Types.ObjectId, ref: "STS" }, // Reference to the STS it belongs to
+  assigned: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model("Vehicle", vehicleSchema);

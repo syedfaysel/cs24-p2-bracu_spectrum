@@ -11,15 +11,13 @@ const stsSchema = new Schema({
     type: Number,
     required: true,
   },
-  coordinates: {
-    longtitude: {
-      type: Number,
-      required: true,
-    },
-    latitude: {
-      type: Number,
-      required: true,
-    },
+  longitude: {
+    type: Number,
+    required: true,
+  },
+  latitude: {
+    type: Number,
+    required: true,
   },
   managers: [
     {
